@@ -1,10 +1,12 @@
 {
-  "name": "three-viewer",
+  "name": "three-viewer0",
   "version": "1.0.0",
-  "description": "A simple application to visualize 3D object files in GLB format.",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -13,5 +15,8 @@
   },
   "author": "",
   "license": "ISC",
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "vite": "^7.1.5"
+  }
 }

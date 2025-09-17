@@ -1,32 +1,45 @@
-# three-viewer
+# Three.js Model Viewer
 
-This project is a simple web application for visualizing 3D object files in the GLB format. It utilizes a 3D rendering library to load and display the models in a web browser.
+A web-based 3D model viewer application that allows users to visualize and interact with GLB/GLTF models. This project specifically showcases the Fourvière Basilica 3D model.
+
+## Features
+
+- Real-time 3D model visualization
+- Orbit controls for model interaction
+- Responsive design
+- Loading progress indicator
+- Automatic model centering and scaling
+- Proper lighting setup
+
+## Technologies Used
+
+- **[Three.js](https://threejs.org/)** - 3D graphics library
+- **[Vite](https://vitejs.dev/)** - Frontend build tool and development server
+- **[GLTFLoader](https://threejs.org/docs/#examples/en/loaders/GLTFLoader)** - For loading GLB/GLTF 3D models
+- **[OrbitControls](https://threejs.org/docs/#examples/en/controls/OrbitControls)** - For camera manipulation
 
 ## Project Structure
 
 ```
-three-viewer
-├── src
-│   ├── index.html        # Main HTML document
-│   ├── styles
-│   │   └── main.css      # Styles for the application
-│   ├── scripts
-│   │   ├── main.js       # Main JavaScript file
-│   │   └── viewer.js     # Logic for loading and displaying 3D models
-│   └── models
-│       └── sample.glb    # Sample 3D model in GLB format
-├── server.js             # Simple server to serve static files
-├── package.json          # npm configuration file
-├── .gitignore            # Files and directories to ignore by Git
-└── README.md             # Documentation for the project
+three-viewer0/
+├── src/
+│   ├── scripts/
+│   │   └── viewer.js     # Main viewer implementation
+│   ├── models/
+│   │   └── fourviere.min.glb    # 3D model file
+│   └── styles/
+│       └── style.css     # Application styles
+├── index.html            # Entry point
+├── vite.config.js        # Vite configuration
+└── package.json          # Project dependencies
 ```
 
 ## Getting Started
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
-   cd three-viewer
+   git clone [repository-url]
+   cd three-viewer0
    ```
 
 2. **Install dependencies:**
@@ -34,19 +47,41 @@ three-viewer
    npm install
    ```
 
-3. **Run the server:**
+3. **Run the development server:**
    ```bash
-   node server.js
+   npm run dev
    ```
 
 4. **Open your browser:**
-   Navigate to `http://localhost:3000` to view the application.
+   The application will automatically open at `http://localhost:5173`
 
 ## Usage
 
-- The application will load the sample 3D model from the `src/models/sample.glb` file and display it in the browser.
-- You can modify the `src/models` directory to include your own GLB files for visualization.
+- **Rotate**: Click and drag with left mouse button
+- **Pan**: Click and drag with right mouse button
+- **Zoom**: Use mouse wheel or pinch gesture
+- **Reset View**: Double click
+
+## Development
+
+To modify the viewer or add new features:
+
+1. The main viewer logic is in `src/scripts/viewer.js`
+2. Add new 3D models to the `src/models` directory
+3. Configure model loading parameters in the `loadModel()` method
+
+## Build for Production
+
+```bash
+npm run build
+```
+
+The built files will be in the `dist` directory.
+
+## License
+
+ISC
 
 ## Contributing
 
-Feel free to submit issues or pull requests if you have suggestions or improvements for the project.
+Contributions are welcome! Please feel free to submit a Pull Request.
