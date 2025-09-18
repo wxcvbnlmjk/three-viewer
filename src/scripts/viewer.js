@@ -51,8 +51,11 @@ class Viewer {
         const loadingOverlay = document.getElementById('loading-overlay');
         const progressText = loadingOverlay.querySelector('.progress-text');
 
+        // Convert GitHub URL to raw format
+        const modelUrl = 'https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/mayor.glb';
+
         loader.load(
-            './mayor.glb',
+            modelUrl,
             (gltf) => {
                 const model = gltf.scene;
                 
