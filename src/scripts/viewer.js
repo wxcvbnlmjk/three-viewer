@@ -52,7 +52,7 @@ class Viewer {
         const progressText = loadingOverlay.querySelector('.progress-text');
 
         loader.load(
-            'mayor.glb',
+            './mayor.glb',
             (gltf) => {
                 const model = gltf.scene;
                 
