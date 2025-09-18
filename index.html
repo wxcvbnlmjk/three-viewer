@@ -24,9 +24,22 @@
             font-family: Arial, sans-serif;
             z-index: 1000;
         }
+        #model-selector {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 4px;
+        }
     </style>
   </head>
   <body>
+    <select id="model-selector">
+        <option value="https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/src/models/fourviere..glb">Fourvière</option>
+        <option value="https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/src/models/mayor.glb">Mayor</option>
+    </select>
     <div id="loading-overlay">
         <div class="progress-text">Loading: 0%</div>
     </div>

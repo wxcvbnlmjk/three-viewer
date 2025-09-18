@@ -7,7 +7,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 class Viewer {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
+        this.currentModel = null;
         this.init();
+        this.setupModelSelector();
     }
 
     init() {
@@ -46,13 +48,25 @@ class Viewer {
         this.loadModel();
     }
 
-    loadModel() {
+    setupModelSelector() {
+        const selector = document.getElementById('model-selector');
+        selector.addEventListener('change', (event) => {
+            // Remove current model if it exists
+            if (this.currentModel) {
+                this.scene.remove(this.currentModel);
+            }
+            // Load new model
+            this.loadModel(event.target.value);
+        });
+    }
+
+    loadModel(modelUrl = 'https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/src/models/fourviere..glb') {
         const loader = new GLTFLoader();
         const loadingOverlay = document.getElementById('loading-overlay');
         const progressText = loadingOverlay.querySelector('.progress-text');
-https://github.com/wxcvbnlmjk/three-viewer/blob/main/src/models/fourviere..glb
-        // Convert GitHub URL to raw format
-        const modelUrl = 'https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/mayor.glb';
+
+        // Show loading overlay
+        loadingOverlay.style.display = 'flex';
 
         loader.load(
             modelUrl,
@@ -78,6 +92,8 @@ https://github.com/wxcvbnlmjk/three-viewer/blob/main/src/models/fourviere..glb
                 this.controls.target.set(0, 0, 0);
                 this.controls.update();
                 
+                // Store reference to current model
+                this.currentModel = model;
                 this.scene.add(model);
 
                 // Hide loading overlay when done
