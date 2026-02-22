@@ -2,6 +2,7 @@
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 class Viewer {
@@ -61,7 +62,14 @@ class Viewer {
     }
 
     loadModel(modelUrl = 'https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/src/models/fourviere..glb') {
+        // configure Draco for compressed meshes
+        const dracoLoader = new DRACOLoader();
+        // use a CDN path or local copy of the Draco decoder files
+        dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+
         const loader = new GLTFLoader();
+        loader.setDRACOLoader(dracoLoader);
+
         const loadingOverlay = document.getElementById('loading-overlay');
         const progressText = loadingOverlay.querySelector('.progress-text');
 
