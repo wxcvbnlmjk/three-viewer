@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 class Viewer {
@@ -69,6 +70,7 @@ class Viewer {
 
         const loader = new GLTFLoader();
         loader.setDRACOLoader(dracoLoader);
+        loader.setMeshoptDecoder(MeshoptDecoder);
 
         const loadingOverlay = document.getElementById('loading-overlay');
         const progressText = loadingOverlay.querySelector('.progress-text');
