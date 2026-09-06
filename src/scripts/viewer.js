@@ -21,7 +21,7 @@ class Viewer {
 
         // Camera setup
         const aspect = this.container.clientWidth / this.container.clientHeight;
-        this.camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(75, aspect, 0.01, 1000);
         this.camera.position.set(0, 2, 5);
 
         // Renderer setup
@@ -35,10 +35,14 @@ class Viewer {
         this.controls.enableDamping = true;
 
         // Lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 6);
         const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
         directionalLight.position.set(5, 5, 5);
+        this.lights = [ambientLight, directionalLight];
+        this.baseLightIntensities = this.lights.map((light) => light.intensity);
         this.scene.add(ambientLight, directionalLight);
+
+        this.setupLightingControl();
 
         // Event listeners
         window.addEventListener('resize', this.onResize.bind(this));
@@ -48,6 +52,20 @@ class Viewer {
         
         // Load model
         this.loadModel();
+    }
+
+    setupLightingControl() {
+        const slider = document.getElementById('brightness-slider');
+        const value = document.getElementById('brightness-value');
+
+        slider.addEventListener('input', (event) => {
+            const brightness = Number(event.target.value);
+
+            this.lights.forEach((light, index) => {
+                light.intensity = this.baseLightIntensities[index] * brightness;
+            });
+            value.textContent = `${Math.round(brightness * 100)}%`;
+        });
     }
 
     setupModelSelector() {
@@ -96,7 +114,19 @@ class Viewer {
                 // Adjust camera based on model size
                 const size = box.getSize(new THREE.Vector3());
                 const maxDim = Math.max(size.x, size.y, size.z);
-                this.camera.position.set(0, maxDim * 0.5, maxDim * 1.5);
+                const radius = box.getBoundingSphere(new THREE.Sphere()).radius;
+                const cameraDistance = Math.max(
+                    maxDim * 1.5,
+                    radius / Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2))
+                );
+
+                // Keep the clipping range and zoom limits proportional to the model.
+                this.camera.near = Math.max(radius * 0.001, 0.0001);
+                this.camera.far = Math.max(radius * 100, 1000);
+                this.camera.updateProjectionMatrix();
+                this.controls.minDistance = Math.max(radius * 0.05, this.camera.near * 2);
+                this.controls.maxDistance = radius * 20;
+                this.camera.position.set(0, cameraDistance * 0.33, cameraDistance);
                 this.camera.lookAt(0, 0, 0);
                 
                 this.controls.target.set(0, 0, 0);
