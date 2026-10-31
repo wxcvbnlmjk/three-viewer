@@ -10,6 +10,7 @@ class Viewer {
     constructor(containerId) {
         this.container = document.getElementById(containerId);
         this.currentModel = null;
+        this.mixer = null;
         this.init();
         this.setupModelSelector();
     }
@@ -33,6 +34,7 @@ class Viewer {
         // Controls
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
+        this.clock = new THREE.Clock();
 
         // Lights
         const ambientLight = new THREE.AmbientLight(0xffffff, 6);
@@ -74,13 +76,19 @@ class Viewer {
             // Remove current model if it exists
             if (this.currentModel) {
                 this.scene.remove(this.currentModel);
+                if (this.mixer) {
+                    this.mixer.stopAllAction();
+                    this.mixer.uncacheRoot(this.currentModel);
+                    this.mixer = null;
+                }
+                this.currentModel = null;
             }
             // Load new model
             this.loadModel(event.target.value);
         });
     }
 
-    loadModel(modelUrl = 'https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/src/models/fourviere..glb') {
+    loadModel(modelUrl = 'https://raw.githubusercontent.com/wxcvbnlmjk/three-viewer/main/src/models/fourviere.glb') {
         // configure Draco for compressed meshes
         const dracoLoader = new DRACOLoader();
         // use a CDN path or local copy of the Draco decoder files
@@ -101,8 +109,8 @@ class Viewer {
             (gltf) => {
                 const model = gltf.scene;
                 
-                // Scale down the model
-                model.scale.set(0.1, 0.1, 0.1);
+                const modelScale = modelUrl.includes('crouched_sneaking_left.glb') ? 0.00003 : 0.1;
+                model.scale.setScalar(modelScale);
                 
                 // Center and position model
                 const box = new THREE.Box3().setFromObject(model);
@@ -136,6 +144,13 @@ class Viewer {
                 this.currentModel = model;
                 this.scene.add(model);
 
+                if (gltf.animations.length > 0) {
+                    this.mixer = new THREE.AnimationMixer(model);
+                    gltf.animations.forEach((clip) => {
+                        this.mixer.clipAction(clip).play();
+                    });
+                }
+
                 // Hide loading overlay when done
                 loadingOverlay.style.display = 'none';
             },
@@ -162,6 +177,9 @@ class Viewer {
 
     animate() {
         requestAnimationFrame(this.animate.bind(this));
+        if (this.mixer) {
+            this.mixer.update(this.clock.getDelta());
+        }
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }
